@@ -4,155 +4,126 @@ import random
 
 st.set_page_config(page_title="🧠 Clarity Room", layout="wide")
 
-# ----------------- EMOTION THEMES -----------------
+# ----------------- Emotion Themes -----------------
 moods = {
-    "happy":    {"emoji": "😄", "bg": "#e6f9f0", "accent": "#2ecc71"},
-    "sad":      {"emoji": "😢", "bg": "#e8f1fc", "accent": "#3498db"},
-    "angry":    {"emoji": "😡", "bg": "#fdecea", "accent": "#e74c3c"},
-    "anxious":  {"emoji": "😰", "bg": "#fff5e6", "accent": "#f39c12"},
-    "neutral":  {"emoji": "😐", "bg": "#f9f9f9", "accent": "#95a5a6"}
+    "happy":    {"emoji": "😄", "bg": "#e8fdf5", "accent": "#2ecc71"},
+    "sad":      {"emoji": "😢", "bg": "#f0f4ff", "accent": "#2980b9"},
+    "angry":    {"emoji": "😡", "bg": "#ffecec", "accent": "#e74c3c"},
+    "anxious":  {"emoji": "😰", "bg": "#fffaf0", "accent": "#f39c12"},
+    "neutral":  {"emoji": "😐", "bg": "#f5f5f5", "accent": "#95a5a6"}
 }
 
 prompts = {
     "happy": [
-        "What's bringing you joy today?",
-        "Who made you smile recently?",
-        "How can you spread this feeling?"
+        "What’s something that made you smile recently?"
     ],
     "sad": [
-        "What’s been heavy on your heart?",
-        "Is there something you wish could change?",
-        "What small comfort can you give yourself today?"
+        "You’re safe here. Want to share what’s been weighing on your heart?"
     ],
     "angry": [
-        "What’s fueling your anger right now?",
-        "Is there a boundary being crossed?",
-        "How can you release this safely?"
+        "It’s okay to feel anger. Can you describe what caused it?"
     ],
     "anxious": [
-        "What are you worrying about?",
-        "What’s one calming thing you can do?",
-        "Can you reframe your current fear?"
+        "Let’s slow down. What are you feeling anxious about right now?"
     ],
     "neutral": [
-        "What thoughts are passing by today?",
-        "What can make this day meaningful?",
-        "What are you grateful for right now?"
+        "Take a moment. What’s on your mind today?"
     ]
 }
 
-# ----------------- SENTIMENT -----------------
 def analyze_sentiment(text):
     blob = TextBlob(text)
     return blob.sentiment.polarity, blob.sentiment.subjectivity
 
 def get_feedback(polarity):
     if polarity > 0.2:
-        return "🌈 You're radiating light and positivity."
+        return "🌟 You’re shining through with something beautiful."
     elif polarity < -0.2:
-        return "💙 It's okay to feel low. You're safe here."
+        return "💙 These feelings are valid. Thank you for sharing them."
     else:
-        return "🧘 You're holding space for yourself — that matters."
+        return "🧘‍♂️ Your reflection holds calm and balance."
 
-# ----------------- CSS STYLING -----------------
+# ----------------- CSS Styling -----------------
 st.markdown("""
 <style>
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-html, body {
-    font-family: 'Inter', sans-serif;
-    background-color: transparent;
-}
-
-h1, h2, h3, p, label, div, textarea {
+html, body, [class*="css"]  {
     font-family: 'Inter', sans-serif;
 }
 
-header {visibility: hidden;}
-
-/* Container */
-.card {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-    margin: 2rem auto;
-    max-width: 750px;
+.stApp {
+    padding: 0 !important;
 }
 
-/* Emotion Tab Scroll */
-.scroll-box {
+.header-container {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+
+.big-emoji {
+    font-size: 3.5rem;
+}
+
+.emotion-card {
     display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 10px;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
 }
 
-.scroll-box::-webkit-scrollbar {
-    height: 8px;
-}
-.scroll-box::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-}
-
-/* Emotion Button */
-.mood-btn {
-    flex: 0 0 auto;
+.card-btn {
+    background-color: white;
+    border-radius: 1rem;
     border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-size: 15px;
+    padding: 1.5rem 2rem;
+    font-size: 1.2rem;
     cursor: pointer;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: 0.3s;
+    min-width: 120px;
+    text-align: center;
 }
-.mood-btn:hover {
-    background: #eee;
-    transform: scale(1.03);
+.card-btn:hover {
+    transform: scale(1.05);
+    background-color: #f1f1f1;
 }
 
-/* Buttons */
-.stButton > button {
+textarea {
+    font-size: 16px !important;
+    border-radius: 14px !important;
+    padding: 15px !important;
+    background: white !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.stButton>button {
     border-radius: 25px;
-    padding: 10px 30px;
-    background-color: #000;
-    color: white;
+    padding: 0.6rem 2rem;
     font-size: 16px;
     font-weight: bold;
+    background-color: black;
+    color: white;
     border: none;
+    margin-top: 1rem;
     transition: 0.3s;
 }
-.stButton > button:hover {
+.stButton>button:hover {
     background-color: #222;
     transform: scale(1.02);
-}
-
-/* Text Area */
-textarea {
-    border-radius: 16px !important;
-    padding: 12px !important;
-    font-size: 16px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------- SESSION -----------------
+# ----------------- Session Setup -----------------
 if "selected_mood" not in st.session_state:
-    st.session_state.selected_mood = "neutral"
-if "prompts" not in st.session_state:
-    st.session_state.prompts = []
+    st.session_state.selected_mood = None
 
+# ----------------- Main UI -----------------
 mood = st.session_state.selected_mood
-theme = moods[mood]
-bg = theme["bg"]
-accent = theme["accent"]
+bg = moods[mood]["bg"] if mood else "#ffffff"
 
-# ----------------- BACKGROUND -----------------
 st.markdown(f"""
     <style>
         .stApp {{
@@ -161,44 +132,36 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# ----------------- HEADER -----------------
-st.markdown(f"""
-<div style='text-align:center; padding-top: 30px;'>
-    <h1 style='font-size: 2.6em;'>{theme['emoji']} Clarity Room</h1>
-    <p style='font-size: 1.1em; color: #555;'>A clean, calm space to reflect</p>
-</div>
-""", unsafe_allow_html=True)
-
-# ----------------- EMOTION BUTTON BAR -----------------
-st.markdown(f"<div class='scroll-box'>", unsafe_allow_html=True)
-for key, data in moods.items():
-    clicked = st.button(f"{data['emoji']} {key.capitalize()}", key=key)
-    if clicked:
-        st.session_state.selected_mood = key
-        st.session_state.prompts = random.sample(prompts[key], 2)
+st.markdown("<div class='header-container'>", unsafe_allow_html=True)
+st.markdown("<h1>🧠 Clarity Room</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color:#555; font-size:1.1rem;'>Your private emotional reflection space</p>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
-# ----------------- JOURNAL CARD -----------------
-with st.container():
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
+# ----------------- Emotion Selection -----------------
+st.markdown("#### 💬 How are you feeling right now?")
+st.markdown("<div class='emotion-card'>", unsafe_allow_html=True)
 
-    if st.session_state.prompts:
-        st.markdown("### ✍️ Prompts for You:")
-        for p in st.session_state.prompts:
-            st.write(f"• {p}")
+for key, data in moods.items():
+    if st.button(f"{data['emoji']} {key.capitalize()}"):
+        st.session_state.selected_mood = key
 
-        journal = st.text_area("Your Journal Entry", height=220)
+st.markdown("</div>", unsafe_allow_html=True)
 
-        if st.button("Analyze My Reflection"):
-            if journal.strip():
-                polarity, subjectivity = analyze_sentiment(journal)
-                st.markdown("---")
-                st.markdown("#### 📊 Sentiment Analysis")
-                st.write(f"**Polarity:** `{polarity:.2f}` | **Subjectivity:** `{subjectivity:.2f}`")
-                st.success(get_feedback(polarity))
-            else:
-                st.warning("Please write something to analyze.")
-    else:
-        st.info("Choose an emotion to begin journaling.")
+# ----------------- Journaling Area -----------------
+if st.session_state.selected_mood:
+    mood = st.session_state.selected_mood
+    prompt = prompts[mood][0]
+    accent = moods[mood]["accent"]
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color:{accent};'>{prompt}</h3>", unsafe_allow_html=True)
+    journal = st.text_area("Type here...", height=250)
+
+    if st.button("🧠 Analyze My Reflection"):
+        if journal.strip():
+            polarity, subjectivity = analyze_sentiment(journal)
+            st.markdown("----")
+            st.markdown("### 📊 Insight")
+            st.write(f"**Polarity:** `{polarity:.2f}` | **Subjectivity:** `{subjectivity:.2f}`")
+            st.success(get_feedback(polarity))
+        else:
+            st.warning("Your heart has something to say. Try writing something.")
